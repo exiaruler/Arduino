@@ -36,10 +36,10 @@ void loop()
 
 void push()
 {
-  myservo.write(180);
-    delay(3000);
+  myservo.write(154);
+    delay(5000);
     myservo.write(5);
-    delay(1000);
+    delay(2000);
 }
 
 void exiaStart(){
