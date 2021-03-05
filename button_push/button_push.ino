@@ -1,33 +1,34 @@
 #include "Servo.h"
 
-int servo_pin = D7; // for ESP8266 microcontroller
-int ExiaMode = 4;
+int servo_pin = D5; // for ESP8266 microcontroller
+
 String activate="on";
 Servo myservo;
-
+int degree=160;
 void setup()
 {
- // pinMode(6, OUTPUT);
+ 
   myservo.attach(servo_pin);
-  Serial.begin(9600);
-  myservo.write(5);
-  delay(2000);
+  //Serial.begin(9600);
+  myservo.write(0);
+  delay(3000);
+  
 }
 
 void loop()
 {
   if(activate=="on"){
-    for(int i=0; i<5; i++){
-    push();
-    }
+    exiaCycle();
     activate="off";
     
   }
   
   while(activate=="off"){
         
-        myservo.write(5);
+        myservo.write(0);
+        myservo.detach();
         delay(1000);
+        
      
   }
   
@@ -36,10 +37,14 @@ void loop()
 
 void push()
 {
-  myservo.write(154);
-    delay(5000);
-    myservo.write(5);
+ 
+  myservo.write(degree);
+    delay(3000);
+    //go back
+    myservo.write(0);
     delay(2000);
+
+  
 }
 
 void exiaStart(){
@@ -66,4 +71,7 @@ void exiaCycle(){
   for(int i=0; i<5; i++){
     push();
   }
+}
+void test(){
+ 
 }
