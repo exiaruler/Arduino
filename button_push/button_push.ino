@@ -1,9 +1,10 @@
 #include "Servo.h"
+#include "exia_functions.h"
 //pin init
 int servo_pin = D5; // exia
 String activate="on";
-
-int degree=163;
+// 170
+int degree=180;
 
 // exia settings
 Servo myservo;
@@ -49,10 +50,10 @@ void push()
 {
  
   myservo.write(degree);
-    delay(3000);
+    delay(10000);
     //go back
     myservo.write(0);
-    delay(2000);
+    delay(4000);
 
   
 }
@@ -60,10 +61,10 @@ void warmUp()
 {
  for(int i=0; i<3; i++){
   myservo.write(90);
-    delay(2000);
+    delay(1000);
     //go back
     myservo.write(0);
-    delay(2000);
+    delay(500);
  }
   
 }
@@ -89,8 +90,11 @@ void exiaTransAm(){
   }
 }
 void exiaCycle(){
-  for(int i=0; i<5; i++){
+  //int count=0;
+  for(int count=0; count<5; count++){
+   
     push();
+    
   }
 }
 void powerDown(){
