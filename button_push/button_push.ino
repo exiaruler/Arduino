@@ -1,70 +1,128 @@
 #include "Servo.h"
-#include "exia_functions.h"
+#include "Exia.h"
+
 //pin init
 int servo_pin = D5; // exia
+int servo_pin2= D7; //artoria
 String activate="on";
-// 170
-int degree=180;
+double degree=151.5;
+int restState=10;
 
 // exia settings
 Servo myservo;
+Servo secondservo;
 int Restart=6;
 int startup=1;
 int normal=2;
 int preTrans=3;
 int transAm=4;
 int cycle=5;
+int timeDelay=6000;
+// artoria testing
+Servo saber;
+int pushS=180;
+int pushB=89;
+int standby=0;
+String state="";
+// time calculation 
+int between=1000;
 void setup()
 {
  
   myservo.attach(servo_pin);
-  //Serial.begin(9600);
-  myservo.write(0);
+  myservo.write(restState);
+  saber.attach(servo_pin2);
+  saber.write(pushS);
+  delay(1000);
+  saber.write(pushB);
+  delay(1000);
+  saber.write(pushS);
   delay(500);
+  state="standard";
+  saber.detach();
   warmUp();
-  delay(2000);
-  
+  delay(1000);
 }
 
 void loop()
 {
   if(activate=="on"){
+    //saber.detach();
     exiaCycle();
+   // saber.detach();
     activate="off";
     
   }
   
   while(activate=="off"){
         
-        myservo.write(0);
+        myservo.write(restState);
         myservo.detach();
+        saber.detach();
         delay(1000);
+        delay(calculateTime(30));
+        repositSaber();
+        delay(calculateTime(30));
+        if(state=="standard"){
+          saber.attach(servo_pin2);
+          saber.write(pushS);
+         delay(3000);
+          saber.write(pushB);
+          delay(between);
+          saber.write(pushS);
+          delay(3000);
+          state="fade";
+          saber.detach();
+       }else{
+          if(state=="fade"){
+            saber.attach(servo_pin2);
+            saber.write(pushS);
+            delay(3000);
+            saber.write(pushB);
+            delay(between);
+            saber.write(pushS);
+            delay(1000);
+            saber.write(pushB);
+            delay(between);
+            saber.write(pushS);
+            delay(3000);
+            state="standard";
+            saber.detach();
+        }
+       }
+       
         
-     
   }
-  
-    
 }
-
+int calculateTime(int t){
+ int min=1000*60;
+ return min*t;
+}
+void repositSaber(){
+  saber.attach(servo_pin2);
+  saber.write(180);
+  delay(5000);
+  saber.detach();
+}
 void push()
 {
  
-  myservo.write(degree);
-    delay(10000);
+  myservo.write(degree);  
+   delay(timeDelay);
     //go back
-    myservo.write(0);
-    delay(4000);
+    myservo.write(restState);
+    delay(2000);
 
   
 }
 void warmUp()
 {
  for(int i=0; i<3; i++){
-  myservo.write(90);
+  myservo.write(70);
     delay(1000);
     //go back
-    myservo.write(0);
-    delay(500);
+    myservo.write(restState);
+    delay(1000);
  }
   
 }
@@ -92,12 +150,10 @@ void exiaTransAm(){
 void exiaCycle(){
   //int count=0;
   for(int count=0; count<5; count++){
-   
+   if(count==5){
+      myservo.detach();
+   }
     push();
     
   }
-}
-void powerDown(){
-  
- 
 }
